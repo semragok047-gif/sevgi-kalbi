@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biz Yazılımcı Çocuklarız</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0d1117;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+        }
+
+        /* Sol Üst Kalp Kutusu */
+        .heart-window {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 380px;
+            height: 320px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #heartCanvas {
+            background: #000;
+            border-radius: 4px;
+        }
+
+        /* Sağ Taraf Terminal / Kod Akış Kutusu */
+        .terminal-window {
+            position: absolute;
+            top: 20px;
+            left: 420px;
+            right: 20px;
+            height: 320px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 15px;
+            box-sizing: border-box;
+            color: #58a6ff;
+            font-size: 13px;
+            overflow: hidden;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        /* Ortadaki Ana Yazı */
+        .center-text {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sol Üst: Rengarenk Kalp Penceresi -->
+    <div class="heart-window">
+        <canvas id="heartCanvas" width="340" height="280"></canvas>
+    </div>
+
+    <!-- Sağ Taraf: Terminal / Kod ve Yazı Akışı -->
+    <div class="terminal-window" id="terminal">
+        C:\Users\Developer> init_sequence --start
+        [INFO] Secure connection established...
+        [INFO] Loading love_protocols v4.0...
+        > Seni seviyorum :)
+        > Seni seviyorum :)
+        > Seni seviyorum :)
+        > Seni seviyorum :)
+        > Seni seviyorum :)
+        > Seni seviyorum :)
+        > Seni seviyorum :)
+    </div>
+
+    <!-- Ortadaki Yazı -->
+    <div class="center-text">
+        Biz Yazılımcı Çocuklarız<br>Seviyorum Demeyiz :)
+    </div>
+
+    <script>
+        const canvas = document.getElementById('heartCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawHeart() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2 - 15;
+
+            const colors = ['#ff0055', '#ff7700', '#ffff00', '#00ff66', '#00ffff', '#0088ff', '#9900ff', '#ff00cc'];
+            
+            for (let t = 0; t <= Math.PI * 2; t += 0.03) {
+                const x = 16 * Math.pow(Math.sin(t), 3);
+                const l = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+                
+                const targetX = centerX + x * 8.5;
+                const targetY = centerY + l * 8.5;
+
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY + 15);
+                ctx.lineTo(targetX, targetY);
+                
+                ctx.strokeStyle = colors[Math.floor(Math.random() * colors.length)];
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+            }
+        }
+
+        // Sayfa açıldığında kalbi çiz ve sürekli canlı tut
+        drawHeart();
+        setInterval(drawHeart, 150);
+
+        // Terminale sürekli alt alta "Seni seviyorum :)" yazdırma efekti
+        const terminal = document.getElementById('terminal');
+        const phrases = [
+            "> Seni seviyorum :)",
+            "> [SYS] Derleniyor... Seni seviyorum :)",
+            "> root@love:~# Seni seviyorum :)",
+            "> Status: Seni seviyorum :)"
+        ];
+
+        setInterval(() => {
+            const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+            terminal.innerHTML += `<br>${randomPhrase}`;
+            terminal.scrollTop = terminal.scrollHeight;
+        }, 800);
+    </script>
+</body>
+</html>
